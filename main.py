@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi import File, UploadFile
 import random
 
 app = FastAPI()
@@ -30,3 +31,11 @@ def predict(data: LearnerData):
         "risk_level": risk_level,
         "explanation": "Risk determined based on engagement patterns."
     }
+   @app.post("/upload")
+   async def upload(file: UploadFile = File(...)):
+        content = await file.read()
+        return {
+            "filename": file.filename,
+            "message": "File received successfully",
+            "size_bytes": len(content)
+        }
