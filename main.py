@@ -1,6 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
-from fastapi import File, UploadFile
 import random
 
 app = FastAPI()
@@ -10,13 +9,14 @@ class LearnerData(BaseModel):
     average_score: float
     login_frequency: int
 
+
 @app.get("/")
 def root():
     return {"status": "Backend running"}
 
+
 @app.post("/predict")
 def predict(data: LearnerData):
-    # Fake AI logic (simulate risk score)
     risk_score = random.uniform(0, 1)
 
     if risk_score > 0.7:
@@ -31,11 +31,13 @@ def predict(data: LearnerData):
         "risk_level": risk_level,
         "explanation": "Risk determined based on engagement patterns."
     }
-   @app.post("/upload")
-   async def upload(file: UploadFile = File(...)):
-        content = await file.read()
-        return {
-            "filename": file.filename,
-            "message": "File received successfully",
-            "size_bytes": len(content)
-        }
+
+
+@app.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    content = await file.read()
+    return {
+        "filename": file.filename,
+        "message": "File received successfully",
+        "size_bytes": len(content)
+    }
